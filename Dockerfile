@@ -8,7 +8,7 @@ COPY backend ./backend
 COPY frontend ./frontend
 
 # Install dependencies and build backend
-RUN cd /app/backend && npm ci && npx prisma generate && npm run build
+RUN cd /app/backend && npm install && npx prisma generate && npm run build
 
 # Build frontend
 RUN cd /app/frontend && npm ci && npm run build
