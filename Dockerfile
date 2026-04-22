@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy source
+# Build: force rebuild on code change
 COPY backend ./backend
 COPY frontend ./frontend
 
