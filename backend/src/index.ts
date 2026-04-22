@@ -43,4 +43,5 @@ app.get('*', (_req, res) => {
 app.listen(PORT, () => {
   console.log(`MiniMusic API running on port ${PORT}`)
   console.log(`Frontend served from ${frontendPath}`)
+  console.log(`Build time: ${new Date().toISOString()}`)
 })
