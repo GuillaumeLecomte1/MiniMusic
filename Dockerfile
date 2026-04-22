@@ -11,7 +11,7 @@ COPY frontend ./frontend
 RUN cd /app/backend && npm install && npx prisma generate && npm run build
 
 # Build frontend
-RUN cd /app/frontend && npm ci && npm run build
+RUN cd /app/frontend && npm install && npm run build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
@@ -20,7 +20,7 @@ WORKDIR /app
 
 # Install production dependencies only
 COPY --from=builder /app/backend/package*.json /app/backend/
-RUN cd /app/backend && npm ci --only=production && npx prisma generate
+RUN cd /app/backend && npm install --only=production && npx prisma generate
 
 # Copy built artifacts
 COPY --from=builder /app/backend/dist ./backend/dist
