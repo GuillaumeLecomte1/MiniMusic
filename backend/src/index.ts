@@ -23,7 +23,7 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 // Serve static frontend files
-const frontendPath = path.join(__dirname, '../../frontend/dist')
+const frontendPath = path.join(__dirname, '../frontend/dist')
 app.use(express.static(frontendPath))
 
 app.use('/api/config', configRouter)
