@@ -1,31 +1,14 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: minimusic_postgres
-    environment:
-      POSTGRES_USER: minimusic
-      POSTGRES_PASSWORD: minimusic123
-      POSTGRES_DB: minimusic
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U minimusic"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: minimusic_app
     environment:
-      DATABASE_URL: "postgresql://minimusic:minimusic123@postgres:5432/minimusic?schema=public"
-      ENCRYPTION_KEY: "your-32-char-encryption-key-here!!"
+      DATABASE_URL: "postgresql://minimusic:minimusic123@minimusic-db-li1xgw:5432/minimusic?schema=public"
+      ENCRYPTION_KEY: "MiniMusicSecureKey123456789012"
       MINIMAX_API_URL: "https://api.minimax.io"
       MINIMAX_API_KEY: "${MINIMAX_API_KEY:-}"
       PORT: "3001"
@@ -33,12 +16,6 @@ services:
     ports:
       - "3001:3001"
       - "5173:5173"
-    depends_on:
-      postgres:
-        condition: service_healthy
     volumes:
       - ./backend:/app/backend
       - ./frontend:/app/frontend
-
-volumes:
-  postgres_data:
