@@ -24,13 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 // Serve static frontend files  
 const frontendPath = '/app/frontend/dist'
-console.log('Frontend path:', frontendPath)
 app.use(express.static(frontendPath))
-
-// Test route
-app.get('/test', (_req, res) => {
-  res.json({ path: frontendPath, exists: require('fs').existsSync(frontendPath) })
-})
 
 app.use('/api/config', configRouter)
 app.use('/api/lyrics', lyricsRouter)
