@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiConfig {
+  id        String   @id @default(cuid())
+  apiKey    String   // encrypted
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
+}
+
+model LyricsProject {
+  id           String   @id @default(cuid())
+  title        String?
+  mode         String   // "write_full_song" | "edit"
+  prompt       String?
+  lyrics       String?  // existing lyrics for edit mode
+  resultTitle  String?
+  styleTags    String?
+  resultLyrics String?
+  status       String   @default("pending")
+  traceId      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CoverProject {
+  id              String   @id @default(cuid())
+  model           String   @default("music-cover")
+  audioUrl        String?
+  audioBase64     String?
+  coverFeatureId  String?
+  formattedLyrics String?
+  structureResult Json?
+  audioDuration   Float?
+  traceId         String?
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model MusicProject {
+  id              String   @id @default(cuid())
+  model           String   @default("music-2.6")
+  prompt          String?
+  lyrics          String?
+  isInstrumental  Boolean  @default(false)
+  lyricsOptimizer Boolean  @default(false)
+  outputFormat    String   @default("url")
+
+  // Audio settings
+  sampleRate Int?
+  bitrate    Int?
+  format     String?
+
+  // Response data
+  audioHex      String?
+  audioUrl      String?
+  status        Int?     // 1=in_progress, 2=completed
+  musicDuration Int?
+  traceId       String?
+
+  // Relations
+  lyricsProjectId String?
+  coverProjectId  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lyricsProject LyricsProject? @relation(fields: [lyricsProjectId], references: [id])
+  coverProject  CoverProject?  @relation(fields: [coverProjectId], references: [id])
+}
