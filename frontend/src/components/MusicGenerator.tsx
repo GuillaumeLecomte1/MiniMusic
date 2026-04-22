@@ -39,7 +39,7 @@ export default function MusicGenerator() {
   const downloadAudio = () => {
     if (result?.audioHex) {
       const blob = new Blob(
-        [new Uint8Array(result.audioHex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)))],
+        [new Uint8Array(result.audioHex.match(/.{1,2}/g)!.map((byte: string) => parseInt(byte, 16)))],
         { type: 'audio/mp3' }
       )
       const url = URL.createObjectURL(blob)
