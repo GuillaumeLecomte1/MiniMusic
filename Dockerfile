@@ -3,39 +3,32 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies for backend
-COPY backend/package*.json ./backend/
-RUN cd backend && npm ci
-
-# Install dependencies for frontend
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm ci
-
-# Copy source code
+# Copy all source
 COPY backend ./backend
 COPY frontend ./frontend
 
-# Build backend
-RUN cd backend && npm run build
+# Install dependencies and build backend
+RUN cd /app/backend && npm ci && npx prisma generate && npm run build
 
 # Build frontend
-RUN cd frontend && npm run build
+RUN cd /app/frontend && npm ci && npm run build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Install production dependencies
-COPY backend/package*.json ./backend/
-RUN cd backend && npm ci --only=production
+# Install production dependencies only
+COPY --from=builder /app/backend/package*.json /app/backend/
+RUN cd /app/backend && npm ci --only=production && npx prisma generate
 
 # Copy built artifacts
 COPY --from=builder /app/backend/dist ./backend/dist
 COPY --from=builder /app/frontend/dist ./frontend/dist
+COPY --from=builder /app/backend/prisma ./backend/prisma
 
-# Expose ports
-EXPOSE 3001 5173
+ENV NODE_ENV=production
 
-# Start backend (frontend served by backend in production or separate)
-CMD ["sh", "-c", "cd backend && node dist/index.js"]
+EXPOSE 3001
+
+CMD ["sh", "-c", "cd /app/backend && node dist/index.js"]
