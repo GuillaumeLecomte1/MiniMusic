@@ -13,8 +13,8 @@ RUN cd /app/backend && npm install && npx prisma generate && npm run build
 RUN cd /app/frontend && npm install && npm run build
 
 ENV NODE_ENV=production
-ENV PORT=3003
+ENV PORT=3010
 
-EXPOSE 3003
+EXPOSE 3010
 
 CMD ["sh", "-c", "cd /app/backend && node dist/index.js"]
