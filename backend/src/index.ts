@@ -22,8 +22,8 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
-// Serve static frontend files
-const appPath = path.resolve(__dirname, '..')
+// Serve static frontend files  
+const appPath = path.resolve(__dirname, '../..')
 const frontendPath = path.join(appPath, 'frontend/dist')
 app.use(express.static(frontendPath))
 
