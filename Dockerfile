@@ -18,14 +18,16 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
+# Copy prisma schema first
+COPY --from=builder /app/backend/prisma ./backend/prisma
+
 # Install production dependencies only
 COPY --from=builder /app/backend/package*.json /app/backend/
-RUN cd /app/backend && npm install --only=production && npx prisma generate
+RUN cd /app/backend && npm install --only=production && npx prisma generate --schema ./prisma/schema.prisma
 
 # Copy built artifacts
 COPY --from=builder /app/backend/dist ./backend/dist
 COPY --from=builder /app/frontend/dist ./frontend/dist
-COPY --from=builder /app/backend/prisma ./backend/prisma
 
 ENV NODE_ENV=production
 
