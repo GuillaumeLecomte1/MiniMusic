@@ -29,6 +29,8 @@ model LyricsProject {
   traceId      String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  musicProjects MusicProject[]
 }
 
 model CoverProject {
@@ -44,6 +46,8 @@ model CoverProject {
   status          String   @default("pending")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  musicProjects MusicProject[]
 }
 
 model MusicProject {
